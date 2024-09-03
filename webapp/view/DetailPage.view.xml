@@ -1,0 +1,180 @@
+<mvc:View
+    controllerName="sap.com.managepurchaseorder.controller.DetailPage"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:smartForm="sap.ui.comp.smartform"
+    xmlns:smartField="sap.ui.comp.smartfield"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap"
+    height="100%"
+>
+    <uxap:ObjectPageLayout
+        id="ObjectPageLayout"
+        showHeaderContent="true"
+        showFooter="true"
+        height="100%"
+    >
+        <uxap:headerTitle>
+            <uxap:ObjectPageHeader objectTitle="Manage Purchase Order">
+                <uxap:actions>
+                    <!-- Header Actions, if any -->
+                </uxap:actions>
+            </uxap:ObjectPageHeader>
+        </uxap:headerTitle>
+
+        <uxap:headerContent>
+            <smartForm:SmartForm
+                id="smartformImportance"
+                editable="true"
+            >
+                <smartForm:layout>
+                    <smartForm:ColumnLayout
+                        columnsM="2"
+                        columnsL="3"
+                        columnsXL="4"
+                    />
+                </smartForm:layout>
+                <smartForm:Group label="General Information">
+                    <smartForm:GroupElement label="{i18n>PurchaseOrder}">
+                        <smartField:SmartField
+                            value="{PurchaseOrder}"
+                            id="idPurchaseOrder"
+                        />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement label="{i18n>SupplierName}">
+                        <smartField:SmartField
+                            value="{SupplierName}"
+                          
+                            id="idSupplierName"
+                            enabled="false"
+                        />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement label="{i18n>Supplier}">
+                        <smartField:SmartField
+                            value="{Supplier}"
+                            id="idSupplier"
+                        />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement
+                        label="{i18n>GrossAmountInTransacCurrency}"
+                    >
+                        <smartField:SmartField
+                            value="{GrossAmountInTransacCurrency}"
+                            id="idGrossAmountInTransacCurrency"
+                            mandatory="true"
+                        />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement label="{i18n>Status}">
+                        <smartField:SmartField
+                            value="{Status}"
+                            id="idStatus"
+                            enabled="false"
+                        />
+                    </smartForm:GroupElement>
+                </smartForm:Group>
+            </smartForm:SmartForm>
+        </uxap:headerContent>
+
+        <uxap:sections>
+            <uxap:ObjectPageSection title="Items">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <Table
+                                id="itemsTable"
+                                mode="SingleSelectLeft"
+                                inset="false"
+                                items="{PurchaseItemModel>/items}"
+                            >
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title text="Items" />
+                                        <ToolbarSpacer />
+                                        <Button
+                                            text="Add"
+                                            press="onAddItem"
+                                        />
+                                        <Button
+                                            text="Delete"
+                                            press="onDelete"
+                                        />
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column>
+                                        <Text text="ItemNumber" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="productName" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="ProductDesc" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="UnitPrice" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Quantity" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="UOM" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="TotalAmount" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Plant" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="StorageUnit" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Input value="{PurchaseItemModel>ItemNumber}" />
+                                            <Input value="{PurchaseItemModel>productName}" />
+                                            <Input value="{PurchaseItemModel>ProductDesc}" />
+                                            <Input value="{PurchaseItemModel>UnitPrice}" />
+                                            <Input value="{PurchaseItemModel>Quantity}" />
+                                            <Input value="{PurchaseItemModel>UOM}" />
+                                            <Input value="{PurchaseItemModel>TotalAmount}" />
+                                            <Input value="{PurchaseItemModel>Plant}" />
+                                            <Input value="{PurchaseItemModel>StorageUnit}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
+
+        <uxap:footer>
+            <Toolbar>
+                <ToolbarSpacer />
+                 <Button
+                    text="Create"
+                    press="onCreate"
+                    id="idCreate"
+                    type="Emphasized"
+                />
+                <Button
+                    text="Save"
+                    press="onSave"
+                     id="idSave"
+                    type="Emphasized"
+                />
+                <Button
+                    text="Submit"
+                    press="onSubmit"
+                />
+                <Button
+                    text="Cancel"
+                    press="onCancel"
+                />
+            </Toolbar>
+        </uxap:footer>
+    </uxap:ObjectPageLayout>
+</mvc:View>
