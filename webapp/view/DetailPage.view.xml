@@ -71,6 +71,13 @@
                             enabled="false"
                         />
                     </smartForm:GroupElement>
+                     <smartForm:GroupElement label="{i18n>DeliveryDate}">
+                        <smartField:SmartField
+                            value="{DeliveryDate}"
+                            id="idDeliveryDate"
+                            
+                        />
+                    </smartForm:GroupElement>
                 </smartForm:Group>
             </smartForm:SmartForm>
         </uxap:headerContent>
@@ -136,9 +143,20 @@
                                             <Input value="{PurchaseItemModel>productName}" />
                                             <Input value="{PurchaseItemModel>ProductDesc}" />
                                             <Input value="{PurchaseItemModel>UnitPrice}" />
-                                            <Input value="{PurchaseItemModel>Quantity}" />
+                                            <Input value="{PurchaseItemModel>Quantity} "/>
                                             <Input value="{PurchaseItemModel>UOM}" />
-                                            <Input value="{PurchaseItemModel>TotalAmount}" />
+                                            <!-- <Input value="{PurchaseItemModel>TotalAmount}" editable="false" id="idTotalAmount" /> -->
+                                             <!-- <Input value="{
+            parts: [
+              { path: 'PurchaseItemModel>UnitPrice' },
+              { path: 'PurchaseItemModel>Quantity' }
+            ],
+            formatter: '.calculateTotalAmount' 
+          }" editable="false"/> -->
+
+           <Input  editable="true" 
+                value="{parts:[{path:'PurchaseItemModel>UnitPrice'},{path:'PurchaseItemModel>Quantity'}],formatter:'.calculateTotalAmount'}"/>
+                                            
                                             <Input value="{PurchaseItemModel>Plant}" />
                                             <Input value="{PurchaseItemModel>StorageUnit}" />
                                         </cells>

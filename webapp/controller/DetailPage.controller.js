@@ -41,6 +41,7 @@ sap.ui.define([
                             SupplierName: "",
                             Supplier: "",
                             GrossAmountInTransacCurrency: 0.00,
+                            DeliveryDate:"",
                             Status: "Draft"
 
                         }
@@ -58,12 +59,12 @@ sap.ui.define([
 
             },
             _onRouteMatchedFunction: async function(oEvent){
-                debugger;
+                
                
                 var oArgs = oEvent.getParameter("arguments");
                 var sUUID = oArgs.var1;
+                this.sId = sUUID;
                 let results = await this.getPurchaseOrderById(sUUID);
-                debugger;
                 let aTableRecords = results[0].Items.results;
                 aTableRecords.forEach(function (item) {
                     if (item.Quantity) {
@@ -81,11 +82,13 @@ sap.ui.define([
                 var oData = PurchaseItemModel.getData();
                 oData.items = aTableRecords;
                 PurchaseItemModel.setData(oData);
-                debugger;
+                
                 let sPurchaseOrder = results[0].PurchaseOrder;
                 let sSupplierName = results[0].SupplierName;
                 let sSupplier = results[0].Supplier;
                 let sGrossAmountInTransacCurrency = results[0].GrossAmountInTransacCurrency;
+                debugger;
+                let sDeliveryDate = results[0].DeliveryDate;
                 let sStatus = results[0].Status;
                 var oModel = this.getOwnerComponent().getModel();
                 var that = this;
@@ -96,6 +99,7 @@ sap.ui.define([
                             SupplierName: sSupplierName,
                             Supplier: sSupplier,
                             GrossAmountInTransacCurrency: sGrossAmountInTransacCurrency,
+                            DeliveryDate:sDeliveryDate,
                             Status: sStatus
 
                         }
@@ -135,7 +139,7 @@ sap.ui.define([
 
             },
             onAddItem: function () {
-                debugger;
+                
                 // Get the current model and its data
                 var oModel = this.getView().getModel("PurchaseItemModel");
                 var oData = oModel.getData();
@@ -183,12 +187,17 @@ sap.ui.define([
                 }
             },
             onCreate: function () {
-                // Retrieve data from SmartForm fields (header data)
+                debugger;
+                var oInputDate = new Date(this.getView().byId("idDeliveryDate").getValue());
+    
+                var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern: "yyyy-MM-dd"});
+                var sDeliveryDateISO = oDateFormat.format(oInputDate);
                 var oHeaderData = {
                     PurchaseOrder: this.getView().byId("idPurchaseOrder").getValue(),
                     SupplierName: this.getView().byId("idSupplierName").getValue(),
                     Supplier: this.getView().byId("idSupplier").getValue(),
                     GrossAmountInTransacCurrency: this.getView().byId("idGrossAmountInTransacCurrency").getValue(),
+                    DeliveryDate: sDeliveryDateISO,
                     Status: this.getView().byId("idStatus").getValue(),
                     Items:[]
                 };
@@ -216,6 +225,90 @@ sap.ui.define([
                     }
                 });
             },
+
+
+            calculateTotalAmount: function(UnitPrice, Quantity) {
+
+              
+            
+                // Calculate the total amount
+                var fTotalAmount = UnitPrice * Quantity;
+            
+                // Return the formatted value
+                return fTotalAmount.toFixed(2); // returns a string with two decimal places
+            }
+            ,
+              onCancel :function(){
+                var oRouter = UIComponent.getRouterFor(this);
+                oRouter.navTo("RouteView1", {}, true);
+            },
+            onSubmit:function(){
+                debugger;
+                var oModel = this.getOwnerComponent().getModel();
+                var tId = this.sId;
+                var oPayload = {
+                    ID: tId 
+                };
+                oModel.create("/onSubmit", oPayload,{
+                    success: function (oData, response) {
+                        // Handle success
+                        if (oData && oData.value) {
+                            MessageToast.show(oData.value); // Show success message
+                        } else {
+                            MessageToast.show("Submit successful, but no message returned.");
+                        }
+                    },
+                    error: function (oError) {
+                        // Handle error
+                        var errorMsg = oError.message || "An unknown error occurred.";
+                        MessageBox.error("Error: " + errorMsg);
+                    }
+                });
+            },
+            onSave:function(){
+                debugger;
+                var oInputDate = new Date(this.getView().byId("idDeliveryDate").getValue());
+    
+                var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern: "yyyy-MM-dd"});
+                var sDeliveryDateISO = oDateFormat.format(oInputDate);
+                var oHeaderData = {
+                    PurchaseOrder: this.getView().byId("idPurchaseOrder").getValue(),
+                    SupplierName: this.getView().byId("idSupplierName").getValue(),
+                    Supplier: this.getView().byId("idSupplier").getValue(),
+                    GrossAmountInTransacCurrency: this.getView().byId("idGrossAmountInTransacCurrency").getValue(),
+                    DeliveryDate: sDeliveryDateISO,
+                    Status: this.getView().byId("idStatus").getValue(),
+                    Items:[]
+                };
+
+                // Retrieve table data (line items data)
+                var oTableData = this.getView().getModel("PurchaseItemModel").getData();
+
+                oHeaderData.Items = oTableData.items;
+
+
+                // Log the payload (for debugging purposes)
+                console.log("Payload for submission:", oHeaderData);
+
+                // Get the OData model to communicate with the backend
+                var oODataModel = this.getView().getModel();
+                var tId = this.sId; // Assuming OData model is named "myODataModel"
+                const uri = `/PurchaseOrderT(ID= guid'${tId}')`;
+             
+
+                // Send the data to the backend via OData create method
+                oODataModel.update(uri, oHeaderData, {
+                    success: function () {
+                        MessageToast.show("Purchase order update successfully");
+                    },
+                    error: function (oError) {
+                        MessageToast.show("Error Updating purchase order");
+                        console.error("Error details:", oError);
+                    }
+                });
+
+            }
+            
            
         });
     });

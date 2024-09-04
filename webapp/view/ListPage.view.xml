@@ -42,7 +42,7 @@
                                    class="sapUiResponsiveContentPadding" 
                                    enableAutoColumnWidth="false" 
                                    editTogglable="false"
-                                   initiallyVisibleFields="PurchaseOrder,SupplierName,Supplier,GrossAmountInTransacCurrency,Status">
+                                   initiallyVisibleFields="PurchaseOrder,SupplierName,Supplier,GrossAmountInTransacCurrency,DeliveryDate,Status">
                 <smartTable:customToolbar>
                   	<OverflowToolbar design="Transparent">
                     	<ToolbarSpacer/>
