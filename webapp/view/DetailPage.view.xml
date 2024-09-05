@@ -43,7 +43,7 @@
                     </smartForm:GroupElement>
                     <smartForm:GroupElement label="{i18n>SupplierName}">
                         <smartField:SmartField
-                            value="{SupplierName}"
+                            value="{}"
                           
                             id="idSupplierName"
                             enabled="false"

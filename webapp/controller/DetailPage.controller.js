@@ -29,7 +29,17 @@ sap.ui.define([
 
 
             },
-            _onRouteMatched: function () {
+            _onRouteMatched: function (oEvent) {
+                debugger;
+                var loginModel = this.getOwnerComponent().getModel("loginModel");
+                
+                let emailid = loginModel.getData().emailid;
+                var oArgs = oEvent.getParameter("arguments");
+                var sCreate = oArgs.var1;
+                if(sCreate === "Create"){
+                var PurchaseItemModel = this.getView().getModel("PurchaseItemModel");
+                PurchaseItemModel.setData({ items: [] });
+                }
                 this.getView().byId("idSave").setVisible(false);
                 this.getView().byId("idCreate").setVisible(true);
                 var oModel = this.getOwnerComponent().getModel();
@@ -53,17 +63,19 @@ sap.ui.define([
 
                 })
 
-
+                debugger;
+                this.getView().byId("idSupplierName").setValue(emailid);
 
 
 
             },
             _onRouteMatchedFunction: async function (oEvent) {
-
+              
 
                 var oArgs = oEvent.getParameter("arguments");
                 var sUUID = oArgs.var1;
                 this.sId = sUUID;
+                
                 let results = await this.getPurchaseOrderById(sUUID);
                 let aTableRecords = results[0].Items.results;
                 aTableRecords.forEach(function (item) {
@@ -87,7 +99,7 @@ sap.ui.define([
                 let sSupplierName = results[0].SupplierName;
                 let sSupplier = results[0].Supplier;
                 let sGrossAmountInTransacCurrency = results[0].GrossAmountInTransacCurrency;
-                debugger;
+               
                 let sDeliveryDate = results[0].DeliveryDate;
                 let sStatus = results[0].Status;
                 var oModel = this.getOwnerComponent().getModel();
@@ -112,6 +124,7 @@ sap.ui.define([
 
                 this.getView().byId("idCreate").setVisible(false);
                 this.getView().byId("idSave").setVisible(true);
+                
 
             },
             getPurchaseOrderById: function (sUUID) {
@@ -126,7 +139,7 @@ sap.ui.define([
                         },
                         success: function (response) {
                             resolve(response.results);
-                            MessageToast.show("Purchase order Read successfully");
+                            // MessageToast.show("Purchase order Read successfully");
                         },
                         error: function (oError) {
                             reject(oError);

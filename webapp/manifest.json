@@ -83,10 +83,17 @@
           "bundleName": "sap.com.managepurchaseorder.i18n.i18n"
         }
       },
+      "loginModel": {
+        "type": "sap.ui.model.json.JSONModel"
+    },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
+          "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true,
           "defaultBindingMode": "TwoWay"
         }
       }
