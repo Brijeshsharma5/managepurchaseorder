@@ -46,11 +46,12 @@
                 <smartTable:customToolbar>
                   	<OverflowToolbar design="Transparent">
                     	<ToolbarSpacer/>
-                    	<Button icon="sap-icon://create" tooltip="Create" text="Create" press="onCreate"/>
+                    	<Button icon="sap-icon://create" type="Neutral" tooltip="Create" text="Create" press="onCreate"/>
+                        <Button icon="sap-icon://delete"  type="Negative" tooltip="Delete" text="Delete" press="onDelete"/>
                     	</OverflowToolbar>
 
                 </smartTable:customToolbar>
-                 <Table selectionChange="onRowPress" mode="SingleSelectMaster" id="oTable">
+                 <Table selectionChange="onRowPress" mode="SingleSelectLeft" id="oTable">
                 	
             </Table> 
             </smartTable:SmartTable>

@@ -230,16 +230,16 @@ sap.ui.define([
             },
 
 
-            // calculateTotalAmount: function(UnitPrice, Quantity) {
+            calculateTotalAmount: function(UnitPrice, Quantity) {
 
 
 
-            //     // Calculate the total amount
-            //     var fTotalAmount = UnitPrice * Quantity;
+                // Calculate the total amount
+                var fTotalAmount = UnitPrice * Quantity;
 
-            //     // Return the formatted value
-            //     return fTotalAmount.toFixed(2); // returns a string with two decimal places
-            // },
+                // Return the formatted value
+                return fTotalAmount.toFixed(2); // returns a string with two decimal places
+            },
 
             onCancel: function () {
                 var oRouter = UIComponent.getRouterFor(this);
