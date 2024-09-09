@@ -29,14 +29,14 @@ sap.ui.define([
                 var oDataModel = this.getModel();
                 var loginModel = this.getModel("loginModel");
                 // metadata failed
-            oDataModel.attachMetadataFailed(err => {
-                var response = err.getParameter("response").body;
-                if (response.indexOf("<?xml") !== -1) {
-                    MessageBox.error($($.parseXML(response)).find("message").text());
-                } else {
-                    MessageBox.error(response);
-                }
-            });
+            // oDataModel.attachMetadataFailed(err => {
+            //     var response = err.getParameter("response").body;
+            //     if (response.indexOf("<?xml") !== -1) {
+            //         MessageBox.error($($.parseXML(response)).find("message").text());
+            //     } else {
+            //         MessageBox.error(response);
+            //     }
+            // });
 
             oDataModel.metadataLoaded().then(() => {
                 var site = window.location.href.includes("site");
@@ -60,14 +60,14 @@ sap.ui.define([
             });
 
             // odata request failed
-            oDataModel.attachRequestFailed(err => {
-                var responseText = err.getParameter("response").responseText;
-                if (responseText.indexOf("<?xml") !== -1) {
-                    MessageBox.error($($.parseXML(responseText)).find("message").text());
-                } else {
-                    MessageBox.error(JSON.parse(responseText).error.message.value);
-                }
-             });
+            // oDataModel.attachRequestFailed(err => {
+            //     var responseText = err.getParameter("response").responseText;
+            //     if (responseText.indexOf("<?xml") !== -1) {
+            //         MessageBox.error($($.parseXML(responseText)).find("message").text());
+            //     } else {
+            //         MessageBox.error(JSON.parse(responseText).error.message.value);
+            //     }
+            //  });
 
                 // // enable routing
                 // this.getRouter().initialize();

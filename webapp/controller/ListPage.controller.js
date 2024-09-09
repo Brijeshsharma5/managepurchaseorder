@@ -14,7 +14,7 @@ sap.ui.define([
         },
 
         onCreate: function () {
-            debugger;
+          
             
             // var sSupplier = oEvent.getSource().getBindingContext().getObject().Supplier; // Assuming the event source is bound to Supplier
             // var sPurchaseOrder = oEvent.getSource().getBindingContext().getProperty("PurchaseOrder");
@@ -27,7 +27,7 @@ sap.ui.define([
         },
         onRowPress:function(oEvent){
             
-            debugger;
+           
             var oSelectedItem = oEvent.getParameter("listItem");
             var sUUID = oSelectedItem.getBindingContext().getProperty().ID;
             this.sId = sUUID;
@@ -40,7 +40,7 @@ sap.ui.define([
 
         },
         onDelete: function () {
-            debugger;
+           
             var tId = this.sId;
             var oModel = this.getView().getModel("purchaseModel");
             var sObjectPath = oModel.createKey("/PurchaseOrderT", {

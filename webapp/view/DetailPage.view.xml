@@ -39,11 +39,13 @@
                         <smartField:SmartField
                             value="{PurchaseOrder}"
                             id="idPurchaseOrder"
+                            change="onChangePO"
+                            
                         />
                     </smartForm:GroupElement>
                     <smartForm:GroupElement label="{i18n>SupplierName}">
                         <smartField:SmartField
-                            value="{}"
+                            value="{SupplierName}"
                           
                             id="idSupplierName"
                             enabled="false"
@@ -61,7 +63,8 @@
                         <smartField:SmartField
                             value="{GrossAmountInTransacCurrency}"
                             id="idGrossAmountInTransacCurrency"
-                            mandatory="true"
+                           enabled="false"
+
                         />
                     </smartForm:GroupElement>
                     <smartForm:GroupElement label="{i18n>Status}">
@@ -140,19 +143,29 @@
                                     <ColumnListItem>
                                         <cells>
                                             <Input value="{PurchaseItemModel>ItemNumber}" />
-                                            <Input value="{PurchaseItemModel>productName}" />
+                                             <ComboBox
+				showSecondaryValues= "true"
+                selectedKey="{PurchaseItemModel>productName}"
+				items="{
+					path: '/SEPMRA_I_Product_E',
+                    templateShareable : true
+				}"
+                 selectionChange="onComboBoxSelectionChange">
+				<core:ListItem key="{Product}" text="{Product}" additionalText = "{ProductCategory}"/>
+			</ComboBox>
+                                            <!-- <Input value="{PurchaseItemModel>productName}" /> -->
                                             <Input value="{PurchaseItemModel>ProductDesc}" />
                                             <Input value="{PurchaseItemModel>UnitPrice}" />
                                             <Input value="{PurchaseItemModel>Quantity}"/>
                                             <Input value="{PurchaseItemModel>UOM}" />
-                                            <Input value="{PurchaseItemModel>TotalAmount}" editable="true" id="idTotalAmount" />
-                                             <!-- <Input value="{
+                                            <!-- <Input value="{PurchaseItemModel>TotalAmount}" editable="true" id="idTotalAmount" /> -->
+                                             <Input value="{
             parts: [
               { path: 'PurchaseItemModel>UnitPrice' },
               { path: 'PurchaseItemModel>Quantity' }
             ],
             formatter: '.calculateTotalAmount' 
-          }" editable="false"/> -->
+          }" editable="false"/>
 
            <!-- <Input  editable="true" 
                 value="{parts:[{path:'PurchaseItemModel>UnitPrice'},{path:'PurchaseItemModel>Quantity'}],formatter:'.calculateTotalAmount'}"/> -->

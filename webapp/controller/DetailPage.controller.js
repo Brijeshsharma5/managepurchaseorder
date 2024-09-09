@@ -30,10 +30,10 @@ sap.ui.define([
 
             },
             _onRouteMatched: function (oEvent) {
-                debugger;
+                
                 var loginModel = this.getOwnerComponent().getModel("loginModel");
                 
-                let emailid = loginModel.getData().emailid;
+                this.emailid = loginModel.getData().emailid;
                 var oArgs = oEvent.getParameter("arguments");
                 var sCreate = oArgs.var1;
                 if(sCreate === "Create"){
@@ -63,8 +63,8 @@ sap.ui.define([
 
                 })
 
-                debugger;
-                this.getView().byId("idSupplierName").setValue(emailid);
+              
+                // this.getView().byId("idSupplierName").setValue(emailid);
 
 
 
@@ -202,7 +202,6 @@ sap.ui.define([
             onCreate: function () {
                 debugger;
                 var oInputDate = new Date(this.getView().byId("idDeliveryDate").getValue());
-
                 var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
                 var sDeliveryDateISO = oDateFormat.format(oInputDate);
                 var sGrossAmount = this.getView().byId("idGrossAmountInTransacCurrency").getValue();
@@ -217,11 +216,19 @@ sap.ui.define([
                     Status: this.getView().byId("idStatus").getValue(),
                     Items: []
                 };
-
+                oHeaderData.SupplierName = this.getView().byId("idSupplierName").getValue();
+                
                 // Retrieve table data (line items data)
                 var oTableData = this.getView().getModel("PurchaseItemModel").getData();
 
+
                 oHeaderData.Items = oTableData.items;
+                oHeaderData.Items.forEach(function(Items) {
+                    if (Items.TotalAmount === "") {
+                        Items.TotalAmount = "4000";
+                    }
+                });
+               
 
 
                 // Log the payload (for debugging purposes)
@@ -229,7 +236,7 @@ sap.ui.define([
 
                 // Get the OData model to communicate with the backend
                 var oODataModel = this.getView().getModel(); // Assuming OData model is named "myODataModel"
-
+                
                 // Send the data to the backend via OData create method
                 oODataModel.create("/PurchaseOrderT", oHeaderData, {
                     success: function () {
@@ -244,15 +251,36 @@ sap.ui.define([
 
 
             calculateTotalAmount: function(UnitPrice, Quantity) {
-
+                debugger;
+                var oTable = this.byId("itemsTable"),
+                        aItems = oTable.getItems(),
+                        totalGrossAmount = 0;
+                            // Loop through each row of the table
+                aItems.forEach(function(oItem) {
+                    var oContext = oItem.getBindingContext("PurchaseItemModel"),
+                        unitPrice = oContext.getProperty("UnitPrice"),
+                        quantity = oContext.getProperty("Quantity"),
+                        totalAmount = unitPrice*quantity
+            
+                    totalGrossAmount += totalAmount;
+                }.bind(this));
+            
+                // Update the GrossAmountInTransacCurrency field with the calculated total
+                this.byId("idGrossAmountInTransacCurrency").setValue(totalGrossAmount.toFixed(2));
+                
 
 
                 // Calculate the total amount
                 var fTotalAmount = UnitPrice * Quantity;
-
+               
+                // this.byId("idGrossAmountInTransacCurrency").setValue(fTotalAmount.toFixed(2));
                 // Return the formatted value
                 return fTotalAmount.toFixed(2); // returns a string with two decimal places
+
+                
+               
             },
+            
 
             onCancel: function () {
                 var oRouter = UIComponent.getRouterFor(this);
@@ -344,7 +372,45 @@ sap.ui.define([
                     }
                 });
 
+            },
+            onComboBoxSelectionChange: function (oEvent) {
+             
+                var oSelectedItem = oEvent.getParameter("selectedItem");
+                
+                // Check if an item is actually selected
+                if (oSelectedItem) {
+                    var sSelectedKey = oSelectedItem.getKey();  // Get the key of the selected item
+                    var sSelectedText = oSelectedItem.getAdditionalText();  // Get the additional text (Product Category)
+                    
+                    // Get table data
+                    var tableData = oEvent.getSource().getModel("PurchaseItemModel").getData().items;
+                    
+                    for (let i = 0; i < tableData.length; i++) {
+                        if (sSelectedKey === tableData[i].productName) {
+                            tableData[i].ProductDesc = sSelectedText;  // Set Product Description to the selected item's additional text
+                        }
+                    }
+            
+                    // Refresh the model to update the UI
+                    oEvent.getSource().getModel("PurchaseItemModel").refresh();
+                } else {
+                    console.error("No item selected from the combobox.");
+                }
+            },
+            onChangePO:function(oEvent){
+debugger;//idPurchaseOrder-input-valueHelpDialog
+var oSelectedData = JSON.parse(this.getView().byId("idPurchaseOrder-input-valueHelpDialog").getTable().getBinding().aLastContextData[0]);
+debugger;
+var sSupplier = oSelectedData.Supplier;
+  var sSupplierName = oSelectedData.SupplierName;
+this.getView().byId("idSupplier").setValue(sSupplier);
+    this.getView().byId("idSupplierName").setValue(sSupplierName);
+
+
+
+
             }
+            
 
 
         });
