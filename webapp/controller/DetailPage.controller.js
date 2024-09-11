@@ -3,10 +3,11 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
+    "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator"
 ],
-    function (Controller, UIComponent, JSONModel, MessageToast, Filter, FilterOperator) {
+    function (Controller, UIComponent, JSONModel, MessageToast,MessageBox,Filter,FilterOperator) {
         "use strict";
 
         return Controller.extend("sap.com.managepurchaseorder.controller.DetailPage", {
@@ -346,6 +347,11 @@ sap.ui.define([
                 })
 
                 oHeaderData.Items = oTableData.items;
+                oHeaderData.Items.forEach(function(Items) {
+                    if (Items.TotalAmount === "") {
+                        Items.TotalAmount = "4000";
+                    }
+                });
 
 
 
